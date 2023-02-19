@@ -11,6 +11,12 @@ public class ThirdPersonMovement : MonoBehaviour
     public float speed = 6f;
     public float turnSmoothTime = 0.1f;
     public float turnSmoothVelocity;
+    private Vector3 moveDir;
+
+    //Вертикальные скорости
+    public float jumpSpeed = 8;
+    public float gravity  = -9.8f;
+    private float vSpeed = 0; // current vertical velocity
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +28,7 @@ public class ThirdPersonMovement : MonoBehaviour
     void Update()
     {
         Vector3 direction = new Vector3(movement.x, 0, movement.y);
+
         if (direction.magnitude >= 0.1f)
         {
             //Поворот с учетом того куда смотрит камера
@@ -29,10 +36,18 @@ public class ThirdPersonMovement : MonoBehaviour
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
             transform.rotation = Quaternion.Euler(0, angle, 0);
             //Движение
-            Vector3 moveDir = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
+            moveDir = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
+
+            //Гравитация
+            vSpeed += gravity * Time.deltaTime;
+            moveDir.y = vSpeed;
+
             controller.Move(moveDir.normalized * speed * Time.deltaTime);
+
+
         }
-        
+
+
     }
 
     private void OnMovement(InputValue value)
