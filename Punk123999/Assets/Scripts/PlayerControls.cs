@@ -12,7 +12,7 @@ public class PlayerControls : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rb = gameObject.GetComponent<Rigidbody>();
+        rb = gameObject.transform.GetChild(0).gameObject.GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
